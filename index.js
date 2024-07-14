@@ -21,9 +21,18 @@ let weather = {
         document.querySelector(".description").innerText = description;
         document.querySelector(".temp").innerText = Math.round(temp) + "°C";
         document.querySelector(".humidity").innerText = "Humidity: " + humidity + "%";
-        document.querySelector(".speed").innerText = "Wind speed: " + speed + " km/h";
+        document.querySelector(".wind").innerText = "Wind speed: " + speed + " km/h";
         //document.querySelector(".weather").classList.remove("loading");
         //document.body.style.backgroundImage = "url('https://unsplash.com/blog/content/images/size/w1600/2024/03/" + name + "')"
+
+        fetch(`https://api.unsplash.com/search/photos?query=${name}&client_id=gNHDVHswieakNAH4XZPPISuAYFMXYWfk43WHa4Ptnko`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.results.length > 0) {
+                const imageUrl = data.results[0].urls.regular;
+                document.body.style.backgroundImage = `url('${imageUrl}')`;
+            }
+        });
     },
     search: function() {
         this.fetchWeather(document.querySelector(".search-bar").value);

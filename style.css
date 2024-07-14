@@ -5,9 +5,11 @@ body {
     height: 100vh;
     margin: 0;
     font-family: 'Open Sans', sans-serif;
-    background: #222;     
+    background: #2222;     
     font-size: 120%;   
     background-image: url("https://unsplash.com/blog/content/images/size/w1600/2024/03/ingmar-h-RWS1FY27DUg-unsplash-1.jpg");
+    /* background-image: url("file:///C:/Users/Uyen%20Nguyen/Desktop/JRM/Weather-App/gc.avif"); */    
+    background-size: cover;
 }
 
 .card {
@@ -69,8 +71,8 @@ h1.temp {
     margin-left: 8px;
 }
 
-.huminity {
-    margin-bottom: 0.3em;
+.humidity {
+    margin-bottom: 0.4em;
 }
 /*
 .weather.loading {
