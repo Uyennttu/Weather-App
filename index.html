@@ -1,32 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Playwrite+PE:wght@100..400&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Playwrite+PE:wght@100..400&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="./style.css">
+    <script src="https://kit.fontawesome.com/a692e1c39f.js"></script>
     <script src="./index.js" defer></script>
 </head>
+
 <body>
-    <div class="card">
+    <!--search-->
+    <div class="card hidden">
         <div class="search">
-            <input type="text" class="search-bar" placeholder="Search">
-            <button><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(255,255,255,1)"><path d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z"></path></svg></button>
+            <form class="form-search">
+                <input type="text" class="search-bar" placeholder="Search for a city">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </form>
+            <div class="weather-unit">
+                <span class="celcius">&#176C</span>
+                <span class="farenheit">&#176F</span>
+            </div>
         </div>
 
-        <div class="weather">
-            <h2 class="city">Gold Coast</h2>
-            <h1 class="temp">16°C</h1> 
-            <div class="flex">         
-                <img src="https://openweathermap.org/img/wn/04n.png" alt="" class="icon">  
-                <div class="description">Cloudy</div>
-            </div>  
-            <div class="humidity">Humidity: 63%</div>
-            <div class="wind">Wind Speed: 11 km/h</div>
+        <!--wrong city-->
+        <div class="error hidden">
+            <p>Invalid City Name</p>
+        </div>
+
+        <!--info-->
+        <div class="weather hidden">
+            <h2 class="city"></h2>
+            <div class="datetime"></div>
+            <div class="description"></div>
+            <img src="" class="icon">
+            <h1 class="temp"></h1>
+            <div class="minmax">
+                <p></p>
+                <p></p>
+            </div>
+            <div class="info">
+                <div class="humidity">
+                    <i class="fa-solid fa-droplet"></i>
+                    <p></p>
+                </div>
+                <div class="wind">
+                    <i class="fa-solid fa-wind"></i>
+                    <p></p>
+                </div>
+            </div>
         </div>
     </div>
+    </div>
+    </div>
 </body>
+
 </html>
