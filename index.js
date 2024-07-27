@@ -3,25 +3,32 @@ let units = "metric";
 let weather = {
     apiKey: "12a91b67a2733a92633dbaf49329676d",
     fetchWeather: function (city, units) {
-        fetch(
-            `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${units}&appid=${this.apiKey}`)
-            .then((response) => {
-                if (!response.ok) {
+        const weatherPromise = fetch(
+            `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${units}&appid=${this.apiKey}`
+        );
+
+        const imagePromise = fetch(
+            `https://api.unsplash.com/search/photos?query=${city}&client_id=gNHDVHswieakNAH4XZPPISuAYFMXYWfk43WHa4Ptnko`
+        );
+
+        Promise.all([weatherPromise, imagePromise])
+            .then(([weatherResponse, imageResponse]) => {
+                if (!weatherResponse.ok) {
                     throw new Error("Invalid City Name");
                 }
-                return response.json();
+                return Promise.all([weatherResponse.json(), imageResponse.json()]);
             })
-            .then((data) => {
-                this.displayWeather(data);
+            .then(([weatherData, imageData]) => {
+                this.displayWeather(weatherData);
                 document.querySelector(".error").classList.add("hidden");
                 document.querySelector(".card").classList.remove("hidden");
                 document.querySelector(".weather").classList.remove("hidden");
+
+                if (imageData.results.length > 0) {
+                    const imageUrl = imageData.results[0].urls.regular;
+                    document.body.style.backgroundImage = `url('${imageUrl}')`;
+                }
             })
-            .catch((error) => {
-                document.querySelector(".error").classList.remove("hidden");
-                document.querySelector(".weather").classList.add("hidden");
-                document.querySelector(".card").classList.remove("hidden");
-            });
     },
     convertCountryCode: function (country) {
         let regionNames = new Intl.DisplayNames(["en"], { type: "region" });
@@ -61,16 +68,6 @@ let weather = {
         document.querySelector(".humidity p").innerHTML = "Humidity: " + humidity + "%";
         document.querySelector(".wind p").innerHTML = `Wind Speed: ${speed} ${units === "imperial" ? "mph" : "km/h"}`;
         document.querySelector(".error").classList.add("hidden");
-
-        //Fetch background image from Unsplash
-        fetch(`https://api.unsplash.com/search/photos?query=${name}&client_id=gNHDVHswieakNAH4XZPPISuAYFMXYWfk43WHa4Ptnko`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.results.length > 0) {
-                    const imageUrl = data.results[0].urls.regular;
-                    document.body.style.backgroundImage = `url('${imageUrl}')`;
-                }
-            });
     },
     search: function () {
         const cityInput = document.querySelector(".search-bar").value.trim();
@@ -81,10 +78,11 @@ let weather = {
         } else {
             document.querySelector(".error").classList.remove("hidden");
             document.querySelector(".weather").classList.add("hidden");
-        };
+        }
     }
 };
-//change unit
+
+// Change unit
 document.querySelector(".celcius").addEventListener("click", () => {
     if (units !== "metric") {
         units = "metric";
@@ -97,6 +95,7 @@ document.querySelector(".farenheit").addEventListener("click", () => {
         weather.fetchWeather(city, units);
     }
 });
+
 // Initial weather fetch
 weather.fetchWeather(city, units);
 
@@ -105,5 +104,6 @@ document.querySelector(".form-search").addEventListener("submit", function (even
     event.preventDefault();
     weather.search();
 });
+
 
 
