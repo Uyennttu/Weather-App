@@ -1,40 +1,42 @@
 let city = "Gold Coast";
 let units = "metric";
-let weather = {
+
+const weather = {
     apiKey: "12a91b67a2733a92633dbaf49329676d",
-    fetchWeather: function (city, units) {
-        const weatherPromise = fetch(
-            `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${units}&appid=${this.apiKey}`
-        );
 
-        const imagePromise = fetch(
-            `https://api.unsplash.com/search/photos?query=${city}&client_id=gNHDVHswieakNAH4XZPPISuAYFMXYWfk43WHa4Ptnko`
-        );
+    async fetchWeather(city, units) {
+        try {
+            const [weatherResponse, imageResponse] = await Promise.all([
+                fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${units}&appid=${this.apiKey}`),
+                fetch(`https://api.unsplash.com/search/photos?query=${city}&client_id=gNHDVHswieakNAH4XZPPISuAYFMXYWfk43WHa4Ptnko`)
+            ]);
 
-        Promise.all([weatherPromise, imagePromise])
-            .then(([weatherResponse, imageResponse]) => {
-                if (!weatherResponse.ok) {
-                    throw new Error("Invalid City Name");
-                }
-                return Promise.all([weatherResponse.json(), imageResponse.json()]);
-            })
-            .then(([weatherData, imageData]) => {
-                this.displayWeather(weatherData);
-                document.querySelector(".error").classList.add("hidden");
-                document.querySelector(".card").classList.remove("hidden");
-                document.querySelector(".weather").classList.remove("hidden");
+            if (!weatherResponse.ok) {
+                throw new Error("Invalid City Name");
+            }
 
-                if (imageData.results.length > 0) {
-                    const imageUrl = imageData.results[0].urls.regular;
-                    document.body.style.backgroundImage = `url('${imageUrl}')`;
-                }
-            })
+            const weatherData = await weatherResponse.json();
+            const imageData = await imageResponse.json();
+
+            this.displayWeather(weatherData);
+            document.querySelector(".error").classList.add("hidden");
+            document.querySelector(".card").classList.remove("hidden");
+            document.querySelector(".weather").classList.remove("hidden");
+
+            if (imageData.results.length > 0) {
+                const imageUrl = imageData.results[0].urls.regular;
+                document.body.style.backgroundImage = `url('${imageUrl}')`;
+            }
+        } catch (error) {
+            document.querySelector(".error").classList.remove("hidden");
+            document.querySelector(".weather").classList.add("hidden");
+        }
     },
-    convertCountryCode: function (country) {
+    convertCountryCode(country) {
         let regionNames = new Intl.DisplayNames(["en"], { type: "region" });
         return regionNames.of(country);
     },
-    convertTimeStamp: function (timestamp, timezone) {
+    convertTimeStamp(timestamp, timezone) {
         const convertTimezone = timezone / 3600; // convert seconds to hours
         const date = new Date(timestamp * 1000);
         const options = {
@@ -49,7 +51,7 @@ let weather = {
         };
         return date.toLocaleString("en-US", options);
     },
-    displayWeather: function (data) {
+    displayWeather(data) {
         const { name } = data;
         const { country } = data.sys;
         const { dt: datetime, timezone } = data;
@@ -69,7 +71,7 @@ let weather = {
         document.querySelector(".wind p").innerHTML = `Wind Speed: ${speed} ${units === "imperial" ? "mph" : "km/h"}`;
         document.querySelector(".error").classList.add("hidden");
     },
-    search: function () {
+    search() {
         const cityInput = document.querySelector(".search-bar").value.trim();
         if (cityInput) {
             city = cityInput;
@@ -89,7 +91,7 @@ document.querySelector(".celcius").addEventListener("click", () => {
         weather.fetchWeather(city, units);
     }
 });
-document.querySelector(".farenheit").addEventListener("click", () => {
+document.querySelector(".fahrenheit").addEventListener("click", () => {
     if (units !== "imperial") {
         units = "imperial";
         weather.fetchWeather(city, units);
@@ -104,6 +106,4 @@ document.querySelector(".form-search").addEventListener("submit", function (even
     event.preventDefault();
     weather.search();
 });
-
-
 

@@ -10,6 +10,7 @@ body {
     /*background-image: url("https://unsplash.com/blog/content/images/size/w1600/2024/03/ingmar-h-RWS1FY27DUg-unsplash-1.jpg");
     /* background-image: url("file:///C:/Users/Uyen%20Nguyen/Desktop/JRM/Weather-App/gc.avif"); */
     background-size: cover;
+    background-position: center;
 }
 
 .hidden {
